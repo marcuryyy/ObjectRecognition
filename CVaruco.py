@@ -68,9 +68,6 @@ while True:
                         cv2.putText(frame, aruco_ids[j][1], (int(aruco_ids[j][0][0]), int(aruco_ids[j][0][1])),
                                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
                         correl = 0
-                elif correl < 0.85:
-                    print("_________________________________")
-                    frame = aruco.drawDetectedMarkers(frame, corners, ids)
         cv2.imshow(window_name, frame)
     if cv2.waitKey(delay) & 0xFF == ord('q'):
         break
