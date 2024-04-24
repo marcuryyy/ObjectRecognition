@@ -16,11 +16,7 @@ class Ui_MainWindow(QMainWindow):
         self.centralwidget.setObjectName(u"centralwidget")
         self.question_title = QLabel(self.centralwidget)
 
-        self.capture = cv2.VideoCapture(0)
 
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.update_frame)
-        self.timer.start(10)
 
         self.question_title.setObjectName(u"question_title")
         self.question_title.setGeometry(QRect(40, 50, 271, 61))
@@ -53,10 +49,14 @@ class Ui_MainWindow(QMainWindow):
         self.use_camera_text.setStyleSheet(u"background-color: rgb(255, 255, 255);")
         self.use_camera_text.setAlignment(Qt.AlignCenter)
         self.use_camera_text.setWordWrap(True)
-        self.check_answer_btn = QPushButton(self.centralwidget)
-        self.check_answer_btn.setObjectName(u"check_answer_btn")
-        self.check_answer_btn.setGeometry(QRect(330, 460, 471, 51))
-        self.check_answer_btn.setFont(font2)
+
+        self.turn_on_camera = QPushButton(self.centralwidget)
+        self.turn_on_camera.setObjectName(u"check_answer_btn")
+        self.turn_on_camera.setGeometry(QRect(330, 460, 471, 51))
+        self.turn_on_camera.setFont(font2)
+        self.turn_on_camera.clicked.connect(self.use_camera)
+
+
         self.results_text = QLabel(self.centralwidget)
         self.results_text.setObjectName(u"results_text")
         self.results_text.setGeometry(QRect(820, 50, 191, 61))
@@ -164,7 +164,7 @@ class Ui_MainWindow(QMainWindow):
         self.camera_label.raise_()
         self.next_btn.raise_()
         self.use_camera_text.raise_()
-        self.check_answer_btn.raise_()
+        self.turn_on_camera.raise_()
         self.results_text.raise_()
         self.results_label.raise_()
         self.right_answers.raise_()
@@ -207,9 +207,9 @@ class Ui_MainWindow(QMainWindow):
         self.use_camera_text.setText(QCoreApplication.translate("MainWindow",
                                                                 u"\u041d\u0430\u0432\u0435\u0434\u0438\u0442\u0435 \u043a\u0430\u043c\u0435\u0440\u0443 \u0438 \u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u043e\u0442\u0432\u0435\u0442\u044b",
                                                                 None))
-        self.check_answer_btn.setText(QCoreApplication.translate("MainWindow",
-                                                                 u"\u041f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c \u043e\u0442\u0432\u0435\u0442",
-                                                                 None))
+        self.turn_on_camera.setText(QCoreApplication.translate("MainWindow",
+                                                               u"Включить камеру",
+                                                               None))
         self.results_text.setText(
             QCoreApplication.translate("MainWindow", u"\u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b",
                                        None))
@@ -240,11 +240,15 @@ class Ui_MainWindow(QMainWindow):
             h, w, ch = frame.shape
             bytes_per_line = ch * w
             image = QImage(frame.data, w, h, bytes_per_line, QImage.Format_RGB888)
-            image = image.scaled(471,271,aspectRatioMode=Qt.IgnoreAspectRatio)
+            image = image.scaled(471, 271, aspectRatioMode=Qt.IgnoreAspectRatio)
             self.camera_label.setPixmap(QPixmap.fromImage(image))
 
-    def change_text(self: QCheckBox):
-        self.setText()
+    def use_camera(self):
+        self.capture = cv2.VideoCapture(0)
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_frame)
+        self.timer.start(100)
+
 
 import sys
 
